@@ -8,21 +8,20 @@ Groovy、Scala、JRubyの各言語で以下のベンチマーク値を取得し�
   ・RBTreeMap.newInstance() => RBTreeMap
     新たにRBTreeMapクラスのインスタンスを生成する。
 
-  ・RBTreeMap#put(String key, String value) => String
+  ・RBTreeMap#put(String key, String value) => void/Object
     keyに対してvalueを結びつける。keyがnullの場合例外。valueはnull許可。
     既にkeyに別の値が割り当てられていた場合、valueで置き換える。keyの同
-    値性の意味はJavaのStringのものに従う。戻り値は、メソッド実行前にkey
-    に対して割り当てられていた値。以前の値がnullだったらnull。
-    ただしkeyには順序性を期待できるものとする。順序性の意味はJavaの
-    Stringのものに従う。
+    値性の意味はJavaのStringのものに従う。またkeyには順序性を期待できる
+    ものとする。順序性の意味はJavaのStringのものに従う。戻り値は未定義
+    で、何を返しても返さなくてもよい。
 
   ・RBTreeMap#get(String key) => String
     keyに対して割り当てられている値を返す。keyがnullの場合例外。値が割り
     当てられていない場合はnullを返す。
 
   ・RBTreeMap#height() => int
-    内部の赤黒木の最大の高さを返す。高さは、生成直後で要素数0の時に0、
-    後は、内部の赤黒木の全ての枝で黒ノードの数を数えた際の、最大の数。
+    内部の赤黒木の最大の高さを返す。高さは、生成直後で要素数0の時に1、
+    後は、内部の赤黒木の全ての枝で黒の数を数えた際の、最大の数。
 
 ・引数および戻り値の型については、各言語における上記相当の型を扱えればよ
   く、型をString相当に制限する必要はない。ただしkeyには、JavaのStringと
@@ -44,13 +43,12 @@ Groovy、Scala、JRubyの各言語で以下のベンチマーク値を取得し�
 ・RBTreeMap.newInstance()を呼び、RBTreeMapをインスタンス化する。
 ・用意されたファイルを開き、全てを読み終わるまで以下を繰り返す。
   ・ファイルから1行読み込み、key、value、height文字列を取り出す。
-  ・RBTreeMap#put(key, value)を呼び、戻り値がnullであることを確認する。
+  ・RBTreeMap#put(key, value)を呼ぶ。
   ・RBTreeMap#height()を呼び、数値としてheightと一致することを確認する。
 ・ファイルを閉じる。
 ・再度同じファイルを開き、全てを読み終わるまで以下を繰り返す。
   ・ファイルから1行読み込み、key、value文字列を取り出す。
   ・RBTreeMap#get(key)を呼び、valueと一致することを確認する。
-  ・RBTreeMap#put(key, value)を呼び、戻り値がvalueであることを確認する。
 ・ファイルを閉じる。
 
 用意するファイルフォーマットは、改行"\n"、区切り","、エスケープなしの簡
