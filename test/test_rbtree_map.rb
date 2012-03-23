@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 require File.expand_path('./helper', File.dirname(__FILE__))
+$DEBUG = true
 require 'rbtree_map'
 
-$DEBUG = true
 class RBTreeMap
   class RBTree
     def size

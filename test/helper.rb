@@ -1,9 +1,6 @@
-if $DEBUG
-  begin
-    require 'simplecov'
-    SimpleCov.start
-  rescue LoadError
-  end
+begin
+  require 'simplecov'
+  SimpleCov.start
+rescue LoadError
 end
-$DEBUG = true
 require "test/unit"
