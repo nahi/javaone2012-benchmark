@@ -50,39 +50,40 @@ class RBTreeMap
       end
     end
 
-    def dump_tree(io, indent = '')
-      @right.dump_tree(io, indent + '  ')
-      io << indent << sprintf("#<%s:0x%010x %s %s> => %s", self.class.name, __id__, @color, @key.inspect, @value.inspect) << $/
-      @left.dump_tree(io, indent + '  ')
+    def height
+      [@left.height, @right.height].max + (black? ? 1 : 0)
     end
 
-    def dump_sexp
-      left = @left.dump_sexp
-      right = @right.dump_sexp
-      if left or right
-        '(' + [@key, left || '-', right].compact.join(' ') + ')'
-      else
-        @key
+    class Empty
+      def red?
+        false
       end
-    end
 
-    # for debugging
-    def check_height
-      lh = @left.check_height
-      rh = @right.check_height
-      if red?
-        if @left.red? or @right.red?
-          puts dump_tree(STDERR)
-          raise 'red/red assertion failed'
-        end
-      else
-        if lh != rh
-          puts dump_tree(STDERR)
-          raise "black height unbalanced: #{lh} #{rh}"
-        end
+      def black?
+        true
       end
-      (lh > rh ? lh : rh) + (black? ? 1 : 0)
+
+      def value
+        nil
+      end
+
+      # returns new_root
+      def insert(key, value)
+        RBTree.new(key, value)
+      end
+
+      # returns value
+      def retrieve(key)
+        nil
+      end
+
+      def height
+        0
+      end
     end
+    private_constant :Empty
+
+    EMPTY = Empty.new
 
   protected
 
@@ -140,6 +141,13 @@ class RBTreeMap
       root
     end
 
+    # Pull up red nodes
+    # (b (A C)) where A and C are RED --> (B (a c))
+    #
+    #   b          B
+    #  / \   ->   / \
+    # A   C      a   c
+    #
     def pullup_red
       if black? and @left.red? and @right.red?
         @left.color = @right.color = :BLACK
@@ -187,43 +195,6 @@ class RBTreeMap
       end
       ret.pullup_red
     end
-
-    class Empty
-      def red?
-        false
-      end
-
-      def black?
-        true
-      end
-
-      def value
-        nil
-      end
-
-      # returns new_root
-      def insert(key, value)
-        RBTree.new(key, value)
-      end
-
-      # returns value
-      def retrieve(key)
-        nil
-      end
-
-      def dump_tree(io, indent = '')
-        # intentionally blank
-      end
-
-      def dump_sexp
-        # intentionally blank
-      end
-
-      def check_height
-        1
-      end
-    end
-    EMPTY = RBTree::Empty.new
   end
 
   class << self
@@ -245,6 +216,38 @@ class RBTreeMap
   end
 
   def height
-    @root.check_height
+    @root.height
   end
+end
+
+if $DEBUG
+class RBTreeMap
+  class RBTree
+    def dump_tree(io, indent = '')
+      @right.dump_tree(io, indent + '  ')
+      io << indent << sprintf("#<%s:0x%010x %s %s> => %s", self.class.name, __id__, @color, @key.inspect, @value.inspect) << $/
+      @left.dump_tree(io, indent + '  ')
+    end
+
+    def dump_sexp
+      left = @left.dump_sexp
+      right = @right.dump_sexp
+      if left or right
+        '(' + [@key, left || '-', right].compact.join(' ') + ')'
+      else
+        @key
+      end
+    end
+
+    class Empty
+      def dump_tree(io, indent = '')
+        # intentionally blank
+      end
+
+      def dump_sexp
+        # intentionally blank
+      end
+    end
+  end
+end
 end

@@ -5,4 +5,5 @@ if $DEBUG
   rescue LoadError
   end
 end
+$DEBUG = true
 require "test/unit"
