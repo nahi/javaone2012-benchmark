@@ -249,5 +249,15 @@ class RBTreeMap
       end
     end
   end
+
+  def dump_tree(io = '')
+    @root.dump_tree(io)
+    io << $/
+    io
+  end
+
+  def dump_sexp
+    @root.dump_sexp || ''
+  end
 end
 end
