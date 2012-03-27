@@ -40,14 +40,18 @@ class RBTreeMap
 
     # returns value
     def retrieve(key)
-      case key <=> @key
-      when -1
-        @left.retrieve(key)
-      when 0
-        @value
-      when 1
-        @right.retrieve(key)
+      ptr = self
+      while ptr != EMPTY
+        case key <=> ptr.key
+        when -1
+          ptr = ptr.left
+        when 0
+          return ptr.value
+        when 1
+          ptr = ptr.right
+        end
       end
+      nil
     end
 
     def height
