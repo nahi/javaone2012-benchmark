@@ -35,7 +35,7 @@ class RBTreeMap
         @right = @right.insert(key, value)
         ret = rebalance_for_right_insert
       end
-      ret
+      ret.pullup_red
     end
 
     # returns value
@@ -87,8 +87,8 @@ class RBTreeMap
 
   protected
 
-    def children_both_black?
-      @right.black? and @left.black?
+    def need_rebalance?
+      red? and (@right.red? or @left.red?)
     end
 
     def color=(color)
@@ -159,41 +159,28 @@ class RBTreeMap
   private
 
     # trying to rebalance when the left sub-tree is 1 level higher than the right
-    # precondition: self is black and @left is red
     def rebalance_for_left_insert
-      ret = self
-      if black? and @left.red? and !@left.children_both_black?
-        if @right.red?
-          # pull-up red nodes and let the parent rebalance (see precondition)
-          @color = :RED
-          @left.color = @right.color = :BLACK
-        else
-          # move 1 black from the left to the right by single/double rotation
-          if @left.right.red?
-            @left = @left.rotate_left
-          end
-          ret = rotate_right
+      if black? and @left.need_rebalance?
+        # move 1 black from the left to the right by single/double rotation
+        if @left.right.red?
+          @left = @left.rotate_left
         end
+        rotate_right
+      else
+        self
       end
-      ret.pullup_red
     end
 
     # trying to rebalance when the right sub-tree is 1 level higher than the left
-    # See rebalance_for_left_insert.
     def rebalance_for_right_insert
-      ret = self
-      if black? and @right.red? and !@right.children_both_black?
-        if @left.red?
-          @color = :RED
-          @left.color = @right.color = :BLACK
-        else
-          if @right.left.red?
-            @right = @right.rotate_right
-          end
-          ret = rotate_left
+      if black? and @right.need_rebalance?
+        if @right.left.red?
+          @right = @right.rotate_right
         end
+        rotate_left
+      else
+        self
       end
-      ret.pullup_red
     end
   end
 
