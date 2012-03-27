@@ -24,18 +24,18 @@ class RBTreeMap
 
     # returns new_root
     def insert(key, value)
-      ret = self
       case key <=> @key
       when -1
         @left = @left.insert(key, value)
-        ret = rebalance_for_left_insert
+        new_node = rebalance_for_left_insert
       when 0
         @value = value
+        new_node = self
       when 1
         @right = @right.insert(key, value)
-        ret = rebalance_for_right_insert
+        new_node = rebalance_for_right_insert
       end
-      ret.pullup_red
+      new_node.pullup_red
     end
 
     # returns value
@@ -158,6 +158,7 @@ class RBTreeMap
     # trying to rebalance when the right sub-tree is 1 level higher than the left
     def rebalance_for_right_insert
       if black? and @right.need_rebalance?
+        # move 1 black from the right to the left by single/double rotation
         if @right.left.red?
           @right = @right.rotate_right
         end
