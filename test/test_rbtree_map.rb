@@ -9,7 +9,7 @@ class RBTreeMap
       @left.size + 1 + @right.size
     end
 
-    class Empty
+    class EmptyTree < RBTree
       def size
         0
       end

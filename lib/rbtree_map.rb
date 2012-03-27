@@ -58,17 +58,10 @@ class RBTreeMap
       [@left.height, @right.height].max + (black? ? 1 : 0)
     end
 
-    class Empty
-      def red?
-        false
-      end
-
-      def black?
-        true
-      end
-
-      def value
-        nil
+    class EmptyTree < RBTree
+      def initialize
+        @value = nil
+        @color = :BLACK
       end
 
       # returns new_root
@@ -85,9 +78,8 @@ class RBTreeMap
         0
       end
     end
-    private_constant :Empty
-
-    EMPTY = Empty.new
+    private_constant :EmptyTree
+    EMPTY = EmptyTree.new.freeze
 
   protected
 
@@ -230,7 +222,7 @@ class RBTreeMap
       end
     end
 
-    class Empty
+    class EmptyTree < RBTree
       def dump_tree(io, indent = '')
         # intentionally blank
       end
