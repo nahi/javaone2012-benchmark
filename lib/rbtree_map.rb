@@ -10,7 +10,7 @@ class RBTreeMap
       @color = :RED
     end
 
-    def set_root
+    def make_as_root
       @color = :BLACK
     end
 
@@ -182,7 +182,7 @@ class RBTreeMap
 
   def put(key, value)
     @root = @root.insert(key, value)
-    @root.set_root
+    @root.make_as_root
     value
   end
 
