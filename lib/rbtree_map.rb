@@ -1,7 +1,7 @@
 class RBTreeMap
   class RBTree
-    attr_reader :key, :value, :color
-    attr_reader :left, :right
+    attr_reader :key, :value
+    attr_accessor :color, :left, :right
 
     def initialize(key, value)
       @key, @value = key, value
@@ -85,18 +85,6 @@ class RBTreeMap
 
     def need_rebalance?
       red? and (@right.red? or @left.red?)
-    end
-
-    def color=(color)
-      @color = color
-    end
-
-    def left=(left)
-      @left = left
-    end
-
-    def right=(right)
-      @right = right
     end
 
     def color_flip(other)
