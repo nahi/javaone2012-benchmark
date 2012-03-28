@@ -27,15 +27,14 @@ class RBTreeMap
       case key <=> @key
       when -1
         @left = @left.insert(key, value)
-        new_node = rebalance_for_left_insert
       when 0
         @value = value
-        new_node = self
       when 1
         @right = @right.insert(key, value)
-        new_node = rebalance_for_right_insert
       end
-      new_node.pullup_red
+      # Rebalance of Left leaning red-black trees
+      # http://www.cs.princeton.edu/~rs/talks/LLRB/LLRB.pdf
+      insert_rotate_left.insert_rotate_right.insert_color_flip
     end
 
     # returns value
@@ -55,7 +54,7 @@ class RBTreeMap
     end
 
     def height
-      [@left.height, @right.height].max + (black? ? 1 : 0)
+      @left.height + (black? ? 1 : 0)
     end
 
     class EmptyTree < RBTree
@@ -83,13 +82,40 @@ class RBTreeMap
 
   protected
 
-    def need_rebalance?
-      red? and (@right.red? or @left.red?)
+    # Left leaning RBTree rebalancing methods after insert
+
+    # Do roate_left after insert if needed
+    def insert_rotate_left
+      if @left.black? and @right.red?
+        rotate_left
+      else
+        self
+      end
     end
 
-    def color_flip(other)
+    # Do rotate_right after insert if needed
+    def insert_rotate_right
+      if @left.red? and @left.left.red?
+        rotate_right
+      else
+        self
+      end
+    end
+
+    # Do color_flipt after insert if needed
+    def insert_color_flip
+      if @left.red? and @right.red?
+        color_flip
+      else
+        self
+      end
+    end
+
+    def swap_color(other)
       @color, other.color = other.color, @color
     end
+
+  private
 
     # Right single rotation
     # (b a (D c E)) where D and E are RED --> (d (B a c) E)
@@ -104,7 +130,7 @@ class RBTreeMap
       root = @right
       @right = root.left
       root.left = self
-      root.color_flip(root.left)
+      root.swap_color(root.left)
       root
     end
 
@@ -121,51 +147,21 @@ class RBTreeMap
       root = @left
       @left = root.right
       root.right = self
-      root.color_flip(root.right)
+      root.swap_color(root.right)
       root
     end
 
-    # Pull up red nodes
+    # Flip colors between red children and black parent
     # (b (A C)) where A and C are RED --> (B (a c))
     #
     #   b          B
     #  / \   ->   / \
     # A   C      a   c
     #
-    def pullup_red
-      if black? and @left.red? and @right.red?
-        @left.color = @right.color = :BLACK
-        self.color = :RED
-      end
+    def color_flip
+      @left.color = @right.color = :BLACK
+      self.color = :RED
       self
-    end
-
-  private
-
-    # trying to rebalance when the left sub-tree is 1 level higher than the right
-    def rebalance_for_left_insert
-      if black? and @left.need_rebalance?
-        # move 1 black from the left to the right by single/double rotation
-        if @left.right.red?
-          @left = @left.rotate_left
-        end
-        rotate_right
-      else
-        self
-      end
-    end
-
-    # trying to rebalance when the right sub-tree is 1 level higher than the left
-    def rebalance_for_right_insert
-      if black? and @right.need_rebalance?
-        # move 1 black from the right to the left by single/double rotation
-        if @right.left.red?
-          @right = @right.rotate_right
-        end
-        rotate_left
-      else
-        self
-      end
     end
   end
 

@@ -36,13 +36,13 @@ class TestRBTreeMap < Test::Unit::TestCase
     h.put('a', 1)
     assert_equal 'a', h.dump_sexp
     h.put('b', 2)
-    assert_equal '(a - b)', h.dump_sexp
+    assert_equal '(b a)', h.dump_sexp
     h.put('c', 3)
     assert_equal '(b a c)', h.dump_sexp
     h.put('d', 4)
-    assert_equal '(b a (c - d))', h.dump_sexp
+    assert_equal '(b a (d c))', h.dump_sexp
     h.put('e', 5)
-    assert_equal '(b a (d c e))', h.dump_sexp
+    assert_equal '(d (b a c) e)', h.dump_sexp
   end
 
   def test_tree_rotate_LL
@@ -65,13 +65,13 @@ class TestRBTreeMap < Test::Unit::TestCase
     h.put('g', 3)
     h.put('d', 4)
     h.put('h', 5)
-    assert_equal '(b a (g d h))', h.dump_sexp
+    assert_equal '(g (b a d) h)', h.dump_sexp
     h.put('c', 6)
-    assert_equal '(b a (g (d c) h))', h.dump_sexp
+    assert_equal '(g (b a (d c)) h)', h.dump_sexp
     h.put('e', 6)
     assert_equal '(d (b a c) (g e h))',  h.dump_sexp
     h.put('f', 6)
-    assert_equal '(d (b a c) (g (e - f) h))', h.dump_sexp
+    assert_equal '(d (b a c) (g (f e) h))', h.dump_sexp
   end
 
   def test_tree_rotate_LR
@@ -85,9 +85,9 @@ class TestRBTreeMap < Test::Unit::TestCase
     h.put('0', 7)
     h.put('c', 8)
     h.put('e', 9)
-    assert_equal '(d (b (a 0) c) (g e (h - i)))', h.dump_sexp
+    assert_equal '(d (b (a 0) c) (g e (i h)))', h.dump_sexp
     h.put('f', 10)
-    assert_equal '(d (b (a 0) c) (g (e - f) (h - i)))', h.dump_sexp
+    assert_equal '(d (b (a 0) c) (g (f e) (i h)))', h.dump_sexp
   end
 
   def test_aref_nil
