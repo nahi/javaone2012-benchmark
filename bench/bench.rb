@@ -15,14 +15,18 @@ class BenchmarkApp
 
   def execute(file)
     map = RBTreeMap.newInstance
-    File.open(file).each_line do |line|
-      key, value, _ = line.split(',', 3)
-      map.put(key, value)
+    File.open(file) do |file|
+      while line = file.gets
+        key, value, _ = line.split(',', 3)
+        map.put(key, value)
+      end
     end
-    File.open(file).each_line do |line|
-      key, value, _ = line.split(',', 3)
-      if map.get(key) != value
-        puts "wrong value! #{map.get(key)} != #{value}"
+    File.open(file) do |file|
+      while line = file.gets
+        key, value, _ = line.split(',', 3)
+        if map.get(key) != value
+          puts "wrong value! #{map.get(key)} != #{value}"
+        end
       end
     end
   end
