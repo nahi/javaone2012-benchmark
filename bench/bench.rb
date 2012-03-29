@@ -8,27 +8,27 @@ class BenchmarkApp
     TIMES.times do
       execute(file)
     end
-    start = Time.now
-    execute(file)
-    puts (Time.now - start) * 1000
+    puts execute(file)
   end
 
   def execute(file)
+    start = Time.now
     map = RBTreeMap.newInstance
     File.open(file) do |file|
       while line = file.gets
-        key, value, _ = line.split(',', 3)
+        key, value, _ = line.split(',')
         map.put(key, value)
       end
     end
     File.open(file) do |file|
       while line = file.gets
-        key, value, _ = line.split(',', 3)
+        key, value, _ = line.split(',')
         if map.get(key) != value
           puts "wrong value! #{map.get(key)} != #{value}"
         end
       end
     end
+    (Time.now - start) * 1000
   end
 end
 
