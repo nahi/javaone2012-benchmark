@@ -14,6 +14,10 @@ class RBTreeMap
       @color = :BLACK
     end
 
+    def empty?
+      false
+    end
+
     def red?
       @color == :RED
     end
@@ -40,7 +44,7 @@ class RBTreeMap
     # returns value
     def retrieve(key)
       ptr = self
-      while ptr != EMPTY
+      while !ptr.empty?
         case key <=> ptr.key
         when -1
           ptr = ptr.left
@@ -61,6 +65,10 @@ class RBTreeMap
       def initialize
         @value = nil
         @color = :BLACK
+      end
+
+      def empty?
+        true
       end
 
       # returns new_root
