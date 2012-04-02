@@ -63,6 +63,7 @@ class RBTreeMap
 
     class EmptyTree < RBTree
       def initialize
+        @node_class = RBTree
         @value = nil
         @color = :BLACK
       end
@@ -73,12 +74,7 @@ class RBTreeMap
 
       # returns new_root
       def insert(key, value)
-        RBTree.new(key, value)
-      end
-
-      # returns value
-      def retrieve(key)
-        nil
+        @node_class.new(key, value)
       end
 
       def height
