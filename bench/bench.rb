@@ -2,13 +2,14 @@
 require_relative "../lib/rbtree_map"
 
 class BenchmarkApp
-  TIMES = 5
+  WARMUP_TIME = 10
 
   def run(file)
-    TIMES.times do
+    start = Time.now
+    while Time.now - start < WARMUP_TIME
       execute(file)
     end
-    puts execute(file)
+    execute(file)
   end
 
   def execute(file)
@@ -24,7 +25,7 @@ class BenchmarkApp
       while line = file.gets
         key, value, _ = line.split(',')
         if map.get(key) != value
-          puts "wrong value! #{map.get(key)} != #{value}"
+          raise "wrong value! #{map.get(key)} != #{value}"
         end
       end
     end
@@ -33,4 +34,4 @@ class BenchmarkApp
 end
 
 file = ARGV.shift or raise
-BenchmarkApp.new.run(file)
+puts BenchmarkApp.new.run(file)
