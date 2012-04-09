@@ -5,13 +5,19 @@
    
    src: <https://github.com/nahi/RBTreeMap/blob/master/src/RBTreeMap.java>
 
-## Groovy++
+## Groovy CompileStatic
  
    repo: <https://github.com/nobeans/javaone-tokyo-2012-jvm-bof>
    
-   src: <https://github.com/nobeans/javaone-tokyo-2012-jvm-bof/blob/master/src/main/groovy/org/jggug/javaonetokyo/bof/bench/RBTreeMap.groovy>
+   src: <https://github.com/nobeans/javaone-tokyo-2012-jvm-bof/blob/groovy-2.0.0b-staticcompile/src/main/groovy/org/jggug/javaonetokyo/bof/bench/RBTreeMap.groovy>
 
-## Groovy++
+## Groovy InvokeDynamic
+ 
+   repo: <https://github.com/nobeans/javaone-tokyo-2012-jvm-bof>
+   
+   src: pending...
+
+## Groovy 1.8.6
    repo: <https://github.com/nobeans/javaone-tokyo-2012-jvm-bof>
    
    src: <https://github.com/nobeans/javaone-tokyo-2012-jvm-bof/blob/groovy-1.8.6/src/main/groovy/org/jggug/javaonetokyo/bof/bench/RBTreeMap.groovy>

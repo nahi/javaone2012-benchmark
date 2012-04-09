@@ -1,9 +1,8 @@
 #!/bin/bash -
 
-JAVA_DIR=/home/nahi/git/examples/javaone-tokyo-2012/red-black
+JAVA_DIR=/home/nahi/git/RBTreeMap/src
 JRUBY_DIR=/home/nahi/git/javaone-tokyo-bof-jruby
 GROOVY_DIR=/home/nahi/git/javaone-tokyo-bof-groovy
-GROOVY_PP_DIR=/home/nahi/git/javaone-tokyo-bof-groovy-pp
 SCALA_DIR=/home/nahi/git/javaone-tokyo-bof-scala
 RESOURCE_FILES=/home/nahi/git/javaone-tokyo-bof-jruby/resource/*.csv
 #RESOURCE_FILES=/home/nahi/git/javaone-tokyo-bof-jruby/resource/10000.csv
@@ -24,12 +23,14 @@ do echo $i
     /home/nahi/git/jruby/bin/jruby -Xinvokedynamic.cache.ivars=true -Xcompile.invokedynamic.all=true -X+C -Ilib bench/bench.rb $i
   done
 
-  echo "Groovy"
+  echo "Groovy 1.8.6"
   cd $GROOVY_DIR
+  git checkout groovy-1.8.6
   ./gradlew benchmark -Dinput=$i -Dtrials=5
 
-  echo "Groovy++"
-  cd $GROOVY_PP_DIR
+  echo "Groovy StaticCompile"
+  cd $GROOVY_DIR
+  git checkout groovy-2.0.0b-staticcompile
   ./gradlew benchmark -Dinput=$i -Dtrials=5
 
   echo "Scala(mutable)"
